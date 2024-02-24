@@ -1,0 +1,5 @@
+tempcoderunner
+**/tempcoderunner/
+chatenv
+**/__pycache__/
+.env
