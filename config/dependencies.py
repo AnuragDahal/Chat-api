@@ -1,7 +1,7 @@
 from fastapi import Depends, HTTPException, status, Response,Request
 from typing import Annotated
 from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError, jwt
+from jose import JWTError , jwt
 from utils.envutils import Environment
 
 env= Environment()
@@ -45,3 +45,14 @@ async def verify_token(req: Request, res: Response):
         )
 
     return res
+
+from fastapi import FastAPI, WebSocket
+
+app = FastAPI()
+
+@app.websocket("/ws/{room_id}")
+async def websocket_endpoint(websocket: WebSocket, room_id: str):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_text()
+        await websocket.send_text(f"Message text was: {data} in room {room_id}")
