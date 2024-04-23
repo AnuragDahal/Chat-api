@@ -1,5 +1,7 @@
 from fastapi import APIRouter , WebSocket
 from utils.chat_utils import ConnectionManager
+from core.database import chat_collection
+
 
 manager=ConnectionManager()
 
@@ -7,29 +9,23 @@ router = APIRouter()
 
 
 # In-memory storage for chats
-chats: Dict[str, Chat] = {}
-
-@router.get('/')
-async def get_recent_conversation():
-    # Return the most recent chat
-    if chats:
-        recent_chat_id = sorted(chats.keys())[-1]
-        return chats[recent_chat_id]
-    return {"detail": "No chats available"}
 
 @router.get('/{room_id}')
 async def get_conversation_by_room_id(room_id: str):
+
+    chats=chat_collection.find_one({"room_id":room_id})
+    
+    
     # Return the chat by room id
-    if room_id in chats:
-        return chats[room_id]
-    return {"detail": f"No chat found for room id {room_id}"}
+    # if room_id in chats:
+    #     return chats[room_id]
+    # return {"detail": f"No chat found for room id {room_id}"}
 
 @router.post('/initiate')
 async def initiate():
     # Initiate a new chat
-    room_id = str(len(chats) + 1)  # Generate a new room id
-    chats[room_id] = Chat(room_id=room_id)
-    return {"room_id": room_id}
+    # Create a new chat room and return the room id
+        room_id=
 
 @router.post('/{room_id}/message')
 async def post_message(room_id: str, message: Message):
