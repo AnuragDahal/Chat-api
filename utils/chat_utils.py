@@ -1,6 +1,5 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import WebSocket
 from typing import Dict
-
 
 class ConnectionManager:
     def __init__(self):
@@ -20,18 +19,3 @@ class ConnectionManager:
     async def broadcast(self, message: str):
         for connection in self.active_connections.values():
             await connection.send_text(message)
-
-
-app = FastAPI()
-
-
-@app.websocket("/ws/{room_id}")
-async def websocket_endpoint(websocket: WebSocket, room_id: str):
-    await manager.connect(websocket, room_id)
-    try:
-        while True:
-            data = await websocket.receive_text()
-            await manager.send_message(f"Message text was: {data} in room {room_id}", room_id)
-    except WebSocketDisconnect:
-        manager.disconnect(room_id)
-        await manager.broadcast(f"Client #{room_id} left the chat")

@@ -1,7 +1,7 @@
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import APIRouter, Depends, status, Response
 from handlers.authhandler import AuthHandler
-router = APIRouter(tags=["auth"])
+router = APIRouter(tags=["Authentication"], prefix="/auth")
 
 
 @router.post("/login", status_code=status.HTTP_200_OK)

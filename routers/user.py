@@ -2,17 +2,17 @@ from fastapi import APIRouter, status
 from handlers.userhandler import UserManager
 from typing import List
 from models import schemas
-router = APIRouter(tags=["user"])
+router = APIRouter(tags=["User"], prefix="/user")
 
 
-@router.post("/user", status_code=status.HTTP_201_CREATED,)
+@router.post("/newuser", status_code=status.HTTP_201_CREATED,)
 async def create_user(req: schemas.User):
 
     user = UserManager.create(req)
     return user
 
 
-@router.get("/user", response_model=List[schemas.User], status_code=status.HTTP_200_OK,)
+@router.get("/read", response_model=List[schemas.User], status_code=status.HTTP_200_OK,)
 async def read_user():
 
     user = UserManager.read()
